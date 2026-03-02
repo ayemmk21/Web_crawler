@@ -68,31 +68,6 @@ This ensures compliance with the assignment requirement of using at least five r
 
 ---
 
-## Project Structure
-oscar-films-crawler/
-│
-├── app.py
-├── scraper.py
-├── utils.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-│
-├── data/
-│ └── oscar_films.json
-│
-├── templates/
-│ ├── base.html
-│ └── index.html
-│
-├── static/
-│ ├── css/
-│ └── js/
-│
-└── screenshots/
-
----
-
 ## How to Run the Project
 
 ### Install dependencies
