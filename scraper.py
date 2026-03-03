@@ -5,6 +5,7 @@ import time
 import json
 import os
 from typing import List, Dict, Set
+from extractor import extract_film_data  
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (compatible; OscarFilmScraper/1.0; +https://github.com/ayemmk21/Web_crawler)'
@@ -35,7 +36,6 @@ def collect_oscar_film_links() -> List[Dict[str, str]]:
             if not cells or len(cells) < 4:
                 continue
 
-            # Extract year — skip if not in range
             year = ''
             for cell in cells:
                 text = cell.get_text(strip=True)
@@ -61,7 +61,6 @@ def collect_oscar_film_links() -> List[Dict[str, str]]:
             if full_url in seen_urls:
                 continue
 
-            # Extract awards and nominations here while cells is available
             awards = re.sub(r'\[.*?\]', '', cells[2].get_text(strip=True))
             nominations = re.sub(r'\[.*?\]', '', cells[3].get_text(strip=True))
 
@@ -95,26 +94,30 @@ def download_film_pages(film_links: List[Dict[str, str]]) -> List[Dict]:
 
         try:
             print(f"[{i}/{len(film_links)}] Fetching {title}...", end=" ")
-            response = requests.get(url, headers=HEADERS, timeout=10)
-            response.raise_for_status()
+
+            # Extract structured data directly — no HTML stored
+            extracted = extract_film_data(url)
+
+            if extracted is None:
+                extracted = {}  # use empty dict if extraction failed
 
             films_data.append({
-                'url': url,
-                'title': title,
-                'year': year,
-                'awards': awards,
+                'url':         url,
+                'title':       title,
+                'year':        year,
+                'awards':      awards,
                 'nominations': nominations,
-                'html': response.text
+                **extracted    
             })
             print("✓")
 
-        except requests.RequestException as e:
+        except Exception as e:
             print(f"✗ Failed: {e}")
             continue
 
         time.sleep(1)
 
-    print(f"\nSuccessfully downloaded {len(films_data)} pages")
+    print(f"\nSuccessfully processed {len(films_data)} films")
     return films_data
 
 
