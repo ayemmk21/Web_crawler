@@ -82,16 +82,16 @@ box-shadow:0 0 12px rgba(229,9,20,0.6);
 .search-wrapper input {
     width: 260px;
     padding: 12px 40px 12px 18px;
-    border-radius: 30px;
-    border: none;
+    border-radius: 12px;
+    border: 1px solid #444;
     background: #1e1e1e;
     color: white;
     font-size: 14px;
-    outline: none;
 }
 
 .search-wrapper input:focus {
-    box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+    outline: none;
+    border-color: #e50914;
 }
 
 .search-icon {
@@ -127,6 +127,11 @@ select {
     background-repeat: no-repeat;
     background-position: right 12px center;
 
+}
+
+select:focus {
+    outline: none;
+    border-color: #e50914;
 }
 /* ================ BANNER =================
 #banner{
@@ -176,28 +181,67 @@ cursor:pointer;
 /* ================= GRID ================= */
 .grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
     padding: 30px;
 }
 
-.card {
-    cursor: pointer;
-    transition: transform 0.25s ease;
+.card{
+    cursor:pointer;
 }
 
-.card:hover {
-    transform: scale(1.04);
+/* main card */
+.movie-card{
+    background:#222;
+    border-radius:18px;
+    overflow:hidden;
+    transition:0.25s ease;
 }
 
-.poster-wrapper {
+/* poster */
+.movie-poster{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+    display:block;
+}
+
+/* bottom text section */
+.movie-info{
+    padding:10px 14px 10px 14px;
+    /* padding:14px */
+}
+
+/* title */
+.movie-info h3{
+    margin:0;
+    font-size:15px;
+    font-weight:500;
+}
+
+/* year + wins row */
+.movie-meta{
+    display:flex;
+    justify-content:space-between;
+    margin-top:8px;
+    font-size:13px;
+    color:#aaa;
+}
+
+.wins{
+    color:#f5c542;
+}
+
+/* hover effect */
+.movie-card:hover{
+    transform:scale(1.03);
+    box-shadow:0 0 18px rgba(229,9,20,0.7);
+}
+
+poster-wrapper {
     border-radius: 15px;
     overflow: hidden;
     transition: 0.3s ease;
-}
-
-.poster-wrapper:hover {
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
 }
 
 .poster-wrapper img {
@@ -217,10 +261,12 @@ cursor:pointer;
     display: flex;
     justify-content: flex-end;
     padding: 0 30px;
-    margin-top: 25px;
+    margin-top: 10px;
 }
 
 .sort-text {
+    padding-right:10px;
+    padding-top: 10px;
     color: #9a9a9a;
     font-size: 0.9rem;
     cursor: pointer;

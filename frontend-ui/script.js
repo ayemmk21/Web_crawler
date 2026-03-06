@@ -8,7 +8,9 @@ let sortState = 0;
 // 1 = A-Z
 // 2 = Z-A
 
-/* ===================LOAD DATA==================== */
+/* =========================
+   LOAD DATA
+========================= */
 
 fetch("data.json")
     .then(response => response.json())
@@ -68,7 +70,7 @@ function setupHomeEvents() {
 
 
 /* ================PAGING===================== */
-const moviesPerPage = 30;
+const moviesPerPage = 24;
 let currentPage = 1;
 
 function displayMovies(movies) {
@@ -89,10 +91,20 @@ function displayMovies(movies) {
         movieCard.classList.add("card");
 
         movieCard.innerHTML = `
-            <div class="poster-wrapper">
-                <img src="${movie.poster}" alt="${movie.title}">
+            <div class="movie-card">
+
+                <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
+
+                <div class="movie-info">
+                    <h3>${movie.title}</h3>
+
+                    <div class="movie-meta">
+                        <span class="year">${movie.year}</span>
+                        <span class="wins">⭐ ${movie.wins || 1} wins</span>
+                    </div>
+                </div>
+
             </div>
-            <h3>${movie.title}</h3>
         `;
 
         movieCard.onclick = () => goToDetails(movies.indexOf(movie));
@@ -138,7 +150,10 @@ function applyFilters() {
     const yearValue = document.getElementById("yearFilter")?.value || "All";
 
     currentMovies = originalMovies.filter(movie => {
-        const matchesSearch = movie.title.toLowerCase().includes(searchValue);
+        const matchesSearch =
+            movie.title.toLowerCase().includes(searchValue) ||
+            movie.director.toLowerCase().includes(searchValue) ||
+            movie.starring.toLowerCase().includes(searchValue);
         const matchesYear = yearValue === "All" || movie.year == yearValue;
         return matchesSearch && matchesYear;
     });
