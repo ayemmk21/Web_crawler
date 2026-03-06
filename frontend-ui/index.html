@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Oscar Best Picture Winners 1995-2024</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">
+            <!--uncomment the following lines if you want to add a logo image next to the text-->
+            <!-- <img src="oscar.png" class="logo-icon"> -->
+            <span>Oscar Best Picture Winners 1995–2024</span>
+        </div>
+
+            <div class="nav-controls">
+                <select id="yearFilter" class="red-filter">
+                    <!-- add more options years as needed -->
+                    <option value="All">Filter</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+               </select>
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search movies...">
+                    <span class="search-icon">&#128269;</span>
+              
+                </div>
+                <a href="https://github.com/ayemmk21/Web_crawler/tree/main" target="_blank" class="github-btn">
+                Github
+                </a>
+            </div>
+        </div>
+    </div>
+
+<!-- 
+    <section id="banner">
+        <div class="banner-content">
+            <h1 id="bannerTitle"></h1>
+            <p id="bannerMeta"></p>
+            <p id="bannerCast"></p>
+
+            <button id="bannerBtn">More</button>
+        </div>
+    </section> -->
+
+    <main class="main-content">
+        <div class="grid-top">
+            <div id="sortBtn" class="sort-text">Sort: Default</div>
+        </div>
+        <div id="movieGrid" class="grid"></div>
+        <div id="noResults" class="no-results">Item not found</div>
+        <div id="pagination"></div>
+    </main>
+    
+
+    <footer class="footer">
+        © Oscar Best Picture Winners 1995–2024 | Team name
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
