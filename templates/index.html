@@ -1,198 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Oscar Films 2014–2024</title>
+    <title>Oscar Best Picture Winners 1995-2024</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background: #141414;
-            color: #fff;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 40px;
-            background: #0a0a0a;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        header h1 {
-            color: #e50914;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .search-box {
-            padding: 10px 16px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background: #222;
-            color: #ec0000;
-            font-size: 0.9rem;
-            width: 260px;
-        }
-
-        .search-box:focus { outline: none; border-color: #e50914; }
-
-        select {
-            padding: 10px 14px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background: #222;
-            color: #fff;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        .search-btn {
-            padding: 10px 20px;
-            background: #e50914;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .search-btn:hover { background: #c40812; }
-
-        .github-link {
-            color: #aaa;
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .github-link:hover { color: #fff; }
-
-        .subtitle {
-            padding: 16px 40px 8px;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        /* Card Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-            padding: 20px 40px 40px;
-        }
-
-        .card {
-            background: #1e1e1e;
-            border-radius: 10px;
-            overflow: hidden;
-            text-decoration: none;
-            color: #fff;
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
-        }
-
-        .card img {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card .no-poster {
-            width: 100%;
-            height: 260px;
-            background: #2a2a2a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-        }
-
-        .card-info {
-            padding: 10px 12px 14px;
-        }
-
-        .card-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .card-meta {
-            font-size: 0.78rem;
-            color: #aaa;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .card-awards {
-            color: #f5c518;
-            font-size: 0.78rem;
-        }
-
-        .count { padding: 0 40px 10px; color: #888; font-size: 0.85rem; }
-    </style>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> -->
 </head>
 <body>
 
-<header>
-    <h1>🎬 Oscar Films 2014–2024</h1>
-    <form class="header-controls" action="/search" method="get">
-        <input class="search-box" type="text" name="q"
-               placeholder="Search title, director, cast..."
-               value="{{ query if query else '' }}">
-        <select name="year">
-            <option value="">All Years</option>
-            {% for y in range(2024, 2013, -1) %}
-                <option value="{{ y }}" {% if year_filter == y|string %}selected{% endif %}>{{ y }}</option>
-            {% endfor %}
-        </select>
-        <button class="search-btn" type="submit">Search</button>
-    </form>
-    <a class="github-link" href="https://github.com/ayemmk21/Web_crawler" target="_blank">⭐ GitHub</a>
-</header>
+    <div class="navbar">
+        <div class="logo">
+            <!--uncomment the following lines if you want to add a logo image next to the text-->
+            <!-- <img src="oscar.png" class="logo-icon"> -->
+            <span>Oscar Winners 2014-2024</span>
+        </div>
 
-<p class="count">Showing {{ films|length }} films</p>
-
-<div class="grid">
-    {% for film in films %}
-    <a class="card" href="/film/{{ loop.index0 }}">
-        {% if film.poster %}
-            <img src="{{ film.poster }}" alt="{{ film.title }}">
-        {% else %}
-            <div class="no-poster"></div>
-        {% endif %}
-        <div class="card-info">
-            <div class="card-title">{{ film.title }}</div>
-            <div class="card-meta">
-                <span>{{ film.year }}</span>
-                <span class="card-awards">★ {{ film.awards }} wins</span>
+            <div class="nav-controls">
+                <select id="yearFilter" class="red-filter">
+                    <!-- add more options years as needed -->
+                    <option value="All">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                    <option value="2016">2016</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+               </select>
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search movies...">
+                    <span class="search-icon">&#128269;</span>
+              
+                </div>
+                <a href="https://github.com/ayemmk21/Web_crawler/tree/main" target="_blank" class="github-btn">
+                Github
+                </a>
             </div>
         </div>
-    </a>
-    {% endfor %}
-</div>
+    </div>
 
+<!-- 
+    <section id="banner">
+        <div class="banner-content">
+            <h1 id="bannerTitle"></h1>
+            <p id="bannerMeta"></p>
+            <p id="bannerCast"></p>
+
+            <button id="bannerBtn">More</button>
+        </div>
+    </section> -->
+
+    <main class="main-content">
+        <div class="grid-top">
+            <div id="sortBtn" class="sort-text">Sort: Default</div>
+        </div>
+        <div id="movieGrid" class="grid"></div>
+        <div id="noResults" class="no-results">Item not found</div>
+        <div id="pagination"></div>
+    </main>
+    
+
+    <footer class="footer">
+        © Oscar Best Picture Winners 1995–2024 | Team name
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

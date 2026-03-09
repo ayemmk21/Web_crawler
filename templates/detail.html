@@ -1,49 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ film.title }}</title>
+    <title>Movie Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
-    <header>
-        <a href="/">← Back to all films</a>
-        <h1>{{ film.title }}</h1>
-        <p>{{ film.year }} · {{ film.awards }} wins · {{ film.nominations }} nominations</p>
-    </header>
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">
+        <!--uncomment the following lines if you want to add a logo image next to the text-->
+        <!-- <img src="oscar.png" class="logo-icon"> -->
+        <span>Oscar Winners 2014–2024</span>
+    </div>
 
-    <div class="film-detail">
-
-        <!-- Poster -->
-        {% if film.poster %}
-        <div class="poster">
-            <img src="{{ film.poster }}" alt="{{ film.title }} poster">
+    <div class="nav-controls">
+        <div class="search-wrapper">
+            <input type="text" placeholder="Search movies..." id="searchInput">
+            <span class="search-icon">&#128269;</span>
         </div>
-        {% endif %}
+    </div>
+</div>
 
-        <!-- Info Table -->
-        <table>
-            <tr><th>Director</th><td>{{ film.director }}</td></tr>
-            <tr><th>Starring</th><td>{{ film.starring }}</td></tr>
-            <tr><th>Production</th><td>{{ film.production_companies }}</td></tr>
-            <tr><th>Distributor</th><td>{{ film.distributor }}</td></tr>
-            <tr><th>Running Time</th><td>{{ film.running_time }}</td></tr>
-            <tr><th>Country</th><td>{{ film.country }}</td></tr>
-            <tr><th>Language</th><td>{{ film.language }}</td></tr>
-            <tr><th>Budget</th><td>{{ film.budget }}</td></tr>
-            <tr><th>Box Office</th><td>{{ film.box_office }}</td></tr>
-        </table>
+<main class="main-content">   
+    <div class="details-page">
 
-        <!-- Plot -->
-        {% if film.plot and film.plot != 'N/A' %}
-        <div class="plot">
-            <h2>Plot</h2>
-            <p>{{ film.plot }}</p>
+        <div class="top-bar">
+            <button class="back-btn" onclick="goBack()">← Back</button>
         </div>
-        {% endif %}
+
+        <div id="detailsContainer"></div>
 
     </div>
+
+</main>
+
+<footer class="footer">
+    © Oscar Best Picture Winners 1995–2024 | Team name
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 </html>

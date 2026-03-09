@@ -2,7 +2,7 @@
 import json
 import os
 from flask import Flask, render_template, request
-
+from flask import send_from_directory
 app = Flask(__name__)
 
 # Load film data once at startup
@@ -11,6 +11,9 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), 'data', 'oscar_films.json')
 with open(DATA_PATH, 'r', encoding='utf-8') as f:
     ALL_FILMS = json.load(f)
 
+@app.route('/data/<path:filename>')
+def data_files(filename):
+    return send_from_directory('data', filename)
 
 @app.route('/')
 def index():
