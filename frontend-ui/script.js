@@ -150,10 +150,12 @@ function setupPagination(list) {
 
 function parseAmount(str) {
     if (!str || str === 'N/A') return -1;
-    const match = str.match(/([₩€£$])?\s*([\d,.]+)\s*(million|billion|thousand)?/i);
+    const match = str.match(/([₩€£$])?\s*([\d,.]+)\s*[–\-]?\s*([\d,.]+)?\s*(million|billion|thousand)?/i);
     if (!match) return -1;
-    let num = parseFloat(match[2].replace(/,/g, ''));
-    const unit = (match[3] || '').toLowerCase();
+    const lo = parseFloat(match[2].replace(/,/g, ''));
+    const hi = match[3] ? parseFloat(match[3].replace(/,/g, '')) : lo;
+    let num = (lo + hi) / 2;
+    const unit = (match[4] || '').toLowerCase();
     if (unit === 'billion')       num *= 1_000_000_000;
     else if (unit === 'million')  num *= 1_000_000;
     else if (unit === 'thousand') num *= 1_000;

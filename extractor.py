@@ -67,7 +67,7 @@ def extract_country(text):
 
 def extract_budget(text):
     match = re.search(
-        r'Budget\s*\n\s*((?:₩|\$|€|£)\s*[\d,.]+\s*(?:million|billion|trillion|thousand)?)',
+        r'Budget\s*\n\s*((?:₩|\$|€|£)\s*[\d,.]+(?:\s*[–\-]\s*[\d,.]+)?\s*(?:million|billion|trillion|thousand)?)',
         text, re.IGNORECASE | re.DOTALL
     )
     if match:
