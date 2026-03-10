@@ -1,5 +1,5 @@
+.venv/
 __pycache__/
 *.pyc
 .env
-venv/
-data/physics_laureates.json
+data/data.json

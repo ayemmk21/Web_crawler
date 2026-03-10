@@ -121,7 +121,7 @@ def download_film_pages(film_links: List[Dict[str, str]]) -> List[Dict]:
     return films_data
 
 
-def save_films_data(films_data: List[Dict], output_path: str = 'data/oscar_films.json') -> None:
+def save_films_data(films_data: List[Dict], output_path: str = 'data/data.json') -> None:
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
 
     with open(output_path, 'w', encoding='utf-8') as f:

@@ -3,7 +3,7 @@ console.log("JS is running");
 let movies = [];
 let originalMovies = [];
 let currentMovies = [];
-let sortState = 0; 
+let sortState = 0;
 // 0 = Default
 // 1 = A-Z
 // 2 = Z-A
@@ -12,7 +12,7 @@ let sortState = 0;
    LOAD DATA
 ========================= */
 
-fetch("data.json")
+fetch("/api/films")
     .then(response => response.json())
     .then(data => {
         movies = data;
@@ -32,26 +32,7 @@ fetch("data.json")
 
 /* ================HOME PAGE===================== */
 
-// function displayMovies(movieArray) {
-//     const grid = document.getElementById("movieGrid");
-//     if (!grid) return;
-
-//     grid.innerHTML = "";
-
-//     movieArray.forEach((movie, index) => {
-//         grid.innerHTML += `
-//             <div class="card" onclick="goToDetails(${movies.indexOf(movie)})">
-//                 <div class="poster-wrapper">
-//                     <img src="${movie.poster}" alt="${movie.title}">
-//                 </div>
-//                 <h3>${movie.title}</h3>
-//             </div>
-//         `;
-//     });
-// }
-
 function setupHomeEvents() {
-
     const searchInput = document.getElementById("searchInput");
     if (searchInput) {
         searchInput.addEventListener("input", applyFilters);
@@ -68,13 +49,11 @@ function setupHomeEvents() {
     }
 }
 
-
 /* ================PAGING===================== */
 const moviesPerPage = 24;
 let currentPage = 1;
 
 function displayMovies(movies) {
-
     const grid = document.getElementById("movieGrid");
     if (!grid) return;
 
@@ -82,48 +61,39 @@ function displayMovies(movies) {
 
     const start = (currentPage - 1) * moviesPerPage;
     const end = start + moviesPerPage;
-
     const moviesToShow = movies.slice(start, end);
 
-    moviesToShow.forEach((movie, i) => {
-
+    moviesToShow.forEach((movie) => {
         const movieCard = document.createElement("div");
         movieCard.classList.add("card");
 
         movieCard.innerHTML = `
             <div class="movie-card">
-
-                <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
-
+                <img src="${movie.poster || ''}" alt="${movie.title}" class="movie-poster"
+                     onerror="this.style.display='none'">
                 <div class="movie-info">
                     <h3>${movie.title}</h3>
-
                     <div class="movie-meta">
                         <span class="year">${movie.year}</span>
-                        <span class="wins">⭐ ${movie.wins || 1} wins</span>
+                        <span class="wins">⭐ ${movie.awards || 1} wins</span>
                     </div>
                 </div>
-
             </div>
         `;
 
-        movieCard.onclick = () => goToDetails(movies.indexOf(movie));
+        const originalIndex = originalMovies.indexOf(movie);
+        movieCard.onclick = () => goToDetails(originalIndex);
 
         grid.appendChild(movieCard);
-
     });
-
 }
 
 function setupPagination(movies) {
-
     const pageCount = Math.ceil(movies.length / moviesPerPage);
     const pagination = document.getElementById("pagination");
-
     pagination.innerHTML = "";
 
     for (let i = 1; i <= pageCount; i++) {
-
         const button = document.createElement("button");
         button.innerText = i;
 
@@ -145,62 +115,49 @@ function setupPagination(movies) {
 /* ================FILTER/SORT===================== */
 
 function applyFilters() {
-
     const searchValue = document.getElementById("searchInput")?.value.toLowerCase() || "";
     const yearValue = document.getElementById("yearFilter")?.value || "All";
 
     currentMovies = originalMovies.filter(movie => {
         const matchesSearch =
-            movie.title.toLowerCase().includes(searchValue) ||
-            movie.director.toLowerCase().includes(searchValue) ||
-            movie.starring.toLowerCase().includes(searchValue);
+            (movie.title || "").toLowerCase().includes(searchValue) ||
+            (movie.director || "").toLowerCase().includes(searchValue) ||
+            (movie.starring || "").toLowerCase().includes(searchValue);
         const matchesYear = yearValue === "All" || movie.year == yearValue;
         return matchesSearch && matchesYear;
     });
 
     const grid = document.getElementById("movieGrid");
     const noResults = document.getElementById("noResults");
-
     const searchText = searchValue.trim();
 
     if (currentMovies.length === 0) {
-
         grid.style.display = "none";
         noResults.style.display = "flex";
-
-        if (searchText !== "") {
-            noResults.textContent = `No movies found for "${searchText}"`;
-        } else {
-            noResults.textContent = `No movies found`;
-        }
-
+        noResults.textContent = searchText !== ""
+            ? `No movies found for "${searchText}"`
+            : `No movies found`;
     } else {
-
         grid.style.display = "grid";
         noResults.style.display = "none";
-
         currentPage = 1;
         displayMovies(currentMovies);
         setupPagination(currentMovies);
     }
 }
-function handleSort() {
 
+function handleSort() {
     sortState++;
 
     if (sortState === 1) {
         currentMovies.sort((a, b) => a.title.localeCompare(b.title));
         document.getElementById("sortBtn").textContent = "Sort: A-Z";
-    }
-
-    else if (sortState === 2) {
+    } else if (sortState === 2) {
         currentMovies.sort((a, b) => b.title.localeCompare(a.title));
         document.getElementById("sortBtn").textContent = "Sort: Z-A";
-    }
-
-    else {
+    } else {
         currentMovies = [...originalMovies];
-        applyFilters(); // reapply search + year
+        applyFilters();
         sortState = 0;
         document.getElementById("sortBtn").textContent = "Sort: Default";
         return;
@@ -214,77 +171,65 @@ function handleSort() {
 /* ================DETAILS PAGE===================== */
 
 function goToDetails(index) {
-    localStorage.setItem("selectedMovieIndex", index);
-    window.location.href = "details.html";
+    window.location.href = "/film/" + index;
 }
 
 function showDetails() {
-
     console.log("showDetails running");
 
     const container = document.getElementById("detailsContainer");
-    console.log("container:", container);
-
-    const index = Number(localStorage.getItem("selectedMovieIndex"));
-    console.log("index:", index);
-
-    console.log("movies length:", movies.length);
-
-    const movie = movies[index];
-    console.log("movie:", movie);
-
     if (!container) return;
 
-    if (!movie) {
+    // ← Read index from URL /film/5 → 5
+    const index = Number(window.location.pathname.split("/").pop());
+    console.log("index from URL:", index);
+    console.log("movies length:", movies.length);
+
+    if (isNaN(index) || index < 0 || index >= movies.length) {
         container.innerHTML = "<h2 style='padding:40px'>Movie not found</h2>";
         return;
     }
 
+    const movie = movies[index];
+    console.log("movie:", movie);
+
     container.innerHTML = `
     <div class="details-card">
-        <img src="${movie.poster}" alt="${movie.title}">
-        
+        <img src="${movie.poster || ''}" alt="${movie.title}"
+             onerror="this.style.display='none'">
         <div class="details-text">
             <h2>${movie.title}</h2>
-
-            <p><strong>Director:</strong> ${movie.director}</p>
-            <p><strong>Starring:</strong> ${movie.starring}</p>
-            <p><strong>Production:</strong> ${movie.production_companies}</p>
-            <p><strong>Distributor:</strong> ${movie.distributor}</p>
-            <p><strong>Running Time:</strong> ${movie.running_time}</p>
-            <p><strong>Country:</strong> ${movie.country}</p>
-            <p><strong>Budget:</strong> ${movie.budget}</p>
-            <p><strong>Box Office:</strong> ${movie.box_office}</p>
-            <p><strong>Language:</strong> ${movie.language}</p>
-
+            <p><strong>Year:</strong> ${movie.year}</p>
+            <p><strong>Awards:</strong> ${movie.awards} wins / ${movie.nominations} nominations</p>
+            <p><strong>Director:</strong> ${movie.director || 'N/A'}</p>
+            <p><strong>Starring:</strong> ${movie.starring || 'N/A'}</p>
+            <p><strong>Production:</strong> ${movie.production_companies || 'N/A'}</p>
+            <p><strong>Distributor:</strong> ${movie.distributor || 'N/A'}</p>
+            <p><strong>Running Time:</strong> ${movie.running_time || 'N/A'}</p>
+            <p><strong>Country:</strong> ${movie.country || 'N/A'}</p>
+            <p><strong>Budget:</strong> ${movie.budget || 'N/A'}</p>
+            <p><strong>Box Office:</strong> ${movie.box_office || 'N/A'}</p>
+            <p><strong>Language:</strong> ${movie.language || 'N/A'}</p>
         </div>
     </div>
     `;
 }
+
 function goBack() {
-    window.location.href = "index.html";
+    window.location.href = "/";
 }
 
-// const logo = document.querySelector(".logo");
-
-// if (logo) {
-//     logo.addEventListener("click", () => {
-//         window.location.href = "index.html";
-//     });
-// }
+/* ================LOGO CLICK===================== */
 
 const logo = document.querySelector(".logo");
 
 if (logo) {
     logo.addEventListener("click", () => {
-
-        // If NOT on homepage → go there
         if (!document.getElementById("movieGrid")) {
-            window.location.href = "index.html";
+            window.location.href = "/";
             return;
         }
 
-        // If already on homepage → reset everything smoothly
         const searchInput = document.getElementById("searchInput");
         const yearFilter = document.getElementById("yearFilter");
         const noResults = document.getElementById("noResults");
