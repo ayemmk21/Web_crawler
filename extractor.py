@@ -33,7 +33,11 @@ def extract_starring(text):
 def extract_production_companies(text):
     match = re.search(r'Production\s*companies?\s*\n\s*(.+?)(?:\n[A-Z][a-z])', text, re.DOTALL)
     if match:
-        companies = [line.strip() for line in match.group(1).splitlines() if line.strip()]
+        companies = []
+        for line in match.group(1).splitlines():
+            line = re.sub(r'\[.*?\]', '', line).strip()
+            if len(line) > 2:
+                companies.append(line)
         return ', '.join(companies)
     return "N/A"
 
